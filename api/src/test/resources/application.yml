@@ -16,6 +16,9 @@ security:
     secret: ${JWT_SECRET:zdtlD3JK56m6wTTgsNFhqzjqP}
     issuer: ${JWT_ISSUER:nimbleways}
 
+server:
+  servlet:
+    context-path: /api
 
 logging:
   level:

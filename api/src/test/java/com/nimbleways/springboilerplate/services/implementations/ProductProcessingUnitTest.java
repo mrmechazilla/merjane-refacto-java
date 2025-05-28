@@ -64,7 +64,7 @@ public class ProductProcessingUnitTest {
         // WHEN
         normalProductProcessor.process(product);
 
-        // THEN: Verify the stock is decremented and saved
+        // THEN
         assertEquals(9, product.getAvailable());
         verify(productRepository).save(product);
     }
