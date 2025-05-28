@@ -1,13 +1,13 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:inventory-db
     driver-class-name: org.h2.Driver
     username: sa
     password: password
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate.format_sql: true
@@ -26,8 +26,6 @@ logging:
 
 server:
   port: 8080
-  servlet:
-    context-path: /api
 
 management:
   endpoints:
