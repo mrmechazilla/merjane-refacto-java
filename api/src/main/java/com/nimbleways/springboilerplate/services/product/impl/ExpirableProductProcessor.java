@@ -1,7 +1,7 @@
 package com.nimbleways.springboilerplate.services.product.impl;
 
 import com.nimbleways.springboilerplate.entities.Product;
-import com.nimbleways.springboilerplate.entities.enums.ProductCategory;
+import com.nimbleways.springboilerplate.entities.enums.ProductType;
 import com.nimbleways.springboilerplate.repositories.ProductRepository;
 import com.nimbleways.springboilerplate.services.product.BaseProductProcessor;
 import com.nimbleways.springboilerplate.services.product.NotificationService;
@@ -20,12 +20,12 @@ public class ExpirableProductProcessor extends BaseProductProcessor implements P
 
     @Override
     public boolean supports(Product product) {
-        return ProductCategory.EXPIRABLE.equals(product.getCategory());
+        return ProductType.EXPIRABLE.equals(product.getType());
     }
 
     @Override
     public void process(Product product) {
-        if (isAvailable(product) && !isExpired(product)) {
+        if (product.isAvailable() && !product.isExpired()) {
             decrementStock(product);
         } else {
             notificationService.sendExpirationNotification(product.getName(), product.getExpiryDate());

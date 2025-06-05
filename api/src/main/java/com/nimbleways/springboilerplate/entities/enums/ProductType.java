@@ -1,6 +1,6 @@
 package com.nimbleways.springboilerplate.entities.enums;
 
-public enum ProductCategory {
+public enum ProductType {
     NORMAL,
     SEASONAL,
     EXPIRABLE

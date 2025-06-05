@@ -7,8 +7,9 @@ import com.nimbleways.springboilerplate.repositories.ProductRepository;
 import com.nimbleways.springboilerplate.services.product.NotificationService;
 import com.nimbleways.springboilerplate.utils.InventoryTestDataFactory;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,29 +37,31 @@ import java.util.Set;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OrderControllerIntegrationTests {
 
-        private final MockMvc mockMvc;
-        private final OrderRepository orderRepository;
-        private final ProductRepository productRepository;
+    private final MockMvc mockMvc;
+    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
-        @MockBean
-        private NotificationService notificationService;
+    @MockBean
+    private NotificationService notificationService;
 
-        @Test
-        public void processOrderShouldReturn() throws Exception {
-            // GIVEN
-            List<Product> allProducts = InventoryTestDataFactory.createTestProducts();
-            Set<Product> orderItems = new HashSet<>(allProducts);
-            Order order = InventoryTestDataFactory.createOrder(orderItems);
+    @ParameterizedTest
+    @ValueSource(strings = {"/v1/orders/{orderId}/process", "/orders/{orderId}/processOrder"})
+    public void processOrderShouldSucceedForAllRoutes(String urlTemplate) throws Exception {
+        // GIVEN
+        List<Product> allProducts = InventoryTestDataFactory.createTestProducts();
+        Set<Product> orderItems = new HashSet<>(allProducts);
+        Order order = InventoryTestDataFactory.createOrder(orderItems);
 
-            productRepository.saveAll(allProducts);
-            order = orderRepository.save(order);
+        productRepository.saveAll(allProducts);
+        order = orderRepository.save(order);
 
-            //
-            mockMvc.perform(post("/v1/orders/{orderId}/process", order.getId())
+        // WHEN
+        mockMvc.perform(post(urlTemplate, order.getId())
                             .contentType("application/json"))
                     .andExpect(status().isOk());
 
-            Order resultOrder = orderRepository.findById(order.getId()).orElseThrow();
-            assertEquals(order.getId(), resultOrder.getId());
-        }
+        // THEN
+        Order resultOrder = orderRepository.findById(order.getId()).orElseThrow();
+        assertEquals(order.getId(), resultOrder.getId());
+    }
 }

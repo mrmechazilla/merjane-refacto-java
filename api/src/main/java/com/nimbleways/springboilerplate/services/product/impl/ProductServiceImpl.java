@@ -23,14 +23,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void notifySeasonalUnavailable(Product product) {
-        product.setAvailable(0);
+        product.markUnavailable();
         productRepository.save(product);
         notificationService.sendOutOfStockNotification(product.getName());
     }
 
     @Override
     public void notifyExpiration(Product product) {
-        product.setAvailable(0);
+        product.markUnavailable();
         productRepository.save(product);
         notificationService.sendExpirationNotification(product.getName(), product.getExpiryDate());
     }

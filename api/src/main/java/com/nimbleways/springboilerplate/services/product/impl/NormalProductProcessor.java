@@ -1,7 +1,7 @@
 package com.nimbleways.springboilerplate.services.product.impl;
 
 import com.nimbleways.springboilerplate.entities.Product;
-import com.nimbleways.springboilerplate.entities.enums.ProductCategory;
+import com.nimbleways.springboilerplate.entities.enums.ProductType;
 import com.nimbleways.springboilerplate.repositories.ProductRepository;
 import com.nimbleways.springboilerplate.services.product.BaseProductProcessor;
 import com.nimbleways.springboilerplate.services.product.ProductProcessor;
@@ -21,12 +21,12 @@ public class NormalProductProcessor extends BaseProductProcessor implements Prod
 
     @Override
     public boolean supports(Product product) {
-        return ProductCategory.NORMAL.equals(product.getCategory());
+        return ProductType.NORMAL.equals(product.getType());
     }
 
     @Override
     public void process(Product product) {
-        if (isAvailable(product)) {
+        if (product.isAvailable()) {
             decrementStock(product);
         } else if (product.getLeadTime() != null && product.getLeadTime() > 0) {
             productService.notifyDelay(product.getLeadTime(), product);

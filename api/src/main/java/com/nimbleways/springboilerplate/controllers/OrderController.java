@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping({"/v1/orders", "/orders"})
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
 
-    @PostMapping("{orderId}/process")
+    @PostMapping({"{orderId}/process", "{orderId}/processOrder"})
     public ResponseEntity<ProcessOrderResponse> processOrder(@PathVariable Long orderId) {
         ProcessOrderResponse response = orderService.processOrder(orderId);
         return ResponseEntity.ok(response);

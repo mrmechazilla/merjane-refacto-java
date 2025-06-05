@@ -13,27 +13,13 @@ public abstract class BaseProductProcessor implements ProductProcessor{
     protected final ProductRepository productRepository;
 
     protected void decrementStock(Product product) {
-        product.setAvailable(product.getAvailable() - 1);
+        product.decrementStock();
         productRepository.save(product);
     }
 
     protected void markUnavailable(Product product) {
-        product.setAvailable(0);
+        product.markUnavailable();
         productRepository.save(product);
     }
 
-    protected boolean isAvailable(Product product) {
-        return product.getAvailable() != null && product.getAvailable() > 0;
-    }
-
-    protected boolean isExpired(Product product) {
-        return product.getExpiryDate() != null && product.getExpiryDate().isBefore(LocalDate.now());
-    }
-
-    protected boolean isInSeason(Product product, LocalDate date) {
-        return product.getSeasonStartDate() != null &&
-                product.getSeasonEndDate() != null &&
-                !date.isBefore(product.getSeasonStartDate()) &&
-                !date.isAfter(product.getSeasonEndDate());
-    }
 }

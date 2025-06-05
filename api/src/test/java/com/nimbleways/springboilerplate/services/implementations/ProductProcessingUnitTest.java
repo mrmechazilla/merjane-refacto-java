@@ -1,12 +1,12 @@
 package com.nimbleways.springboilerplate.services.implementations;
 
 import com.nimbleways.springboilerplate.entities.Product;
-import com.nimbleways.springboilerplate.entities.enums.ProductCategory;
+import com.nimbleways.springboilerplate.entities.enums.ProductType;
 import com.nimbleways.springboilerplate.repositories.ProductRepository;
 import com.nimbleways.springboilerplate.services.product.NotificationService;
-import com.nimbleways.springboilerplate.services.product.ProductService;
 import com.nimbleways.springboilerplate.services.product.impl.ExpirableProductProcessor;
 import com.nimbleways.springboilerplate.services.product.impl.NormalProductProcessor;
+import com.nimbleways.springboilerplate.services.product.impl.ProductServiceImpl;
 import com.nimbleways.springboilerplate.utils.Annotations.UnitTest;
 
 import com.nimbleways.springboilerplate.utils.InventoryTestDataFactory;
@@ -31,7 +31,7 @@ public class ProductProcessingUnitTest {
     @Mock
     private ProductRepository productRepository;
     @InjectMocks 
-    private ProductService productService;
+    private ProductServiceImpl productService;
 
     private NormalProductProcessor normalProductProcessor;
     private ExpirableProductProcessor expirableProductProcessor;
@@ -44,7 +44,7 @@ public class ProductProcessingUnitTest {
     @Test
     void shouldNotifyDelayAndSaveProduct() {
         // GIVEN
-        Product product = InventoryTestDataFactory.createProduct(ProductCategory.NORMAL, 15, 10, "Monitor");
+        Product product = InventoryTestDataFactory.createProduct(ProductType.NORMAL, 15, 10, "Monitor");
         when(productRepository.save(product)).thenReturn(product);
 
         // WHEN
@@ -59,7 +59,7 @@ public class ProductProcessingUnitTest {
     @Test
     void shouldDecrementStockForNormalProductIfAvailable() {
         // GIVEN
-        Product product = InventoryTestDataFactory.createProduct(ProductCategory.NORMAL, 5, 10, "Speaker");
+        Product product = InventoryTestDataFactory.createProduct(ProductType.NORMAL, 5, 10, "Speaker");
 
         // WHEN
         normalProductProcessor.process(product);

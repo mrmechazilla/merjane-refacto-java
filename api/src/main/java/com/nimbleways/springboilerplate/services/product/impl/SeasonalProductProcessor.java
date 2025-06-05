@@ -1,7 +1,7 @@
 package com.nimbleways.springboilerplate.services.product.impl;
 
 import com.nimbleways.springboilerplate.entities.Product;
-import com.nimbleways.springboilerplate.entities.enums.ProductCategory;
+import com.nimbleways.springboilerplate.entities.enums.ProductType;
 import com.nimbleways.springboilerplate.repositories.ProductRepository;
 import com.nimbleways.springboilerplate.services.product.BaseProductProcessor;
 import com.nimbleways.springboilerplate.services.product.NotificationService;
@@ -29,18 +29,18 @@ public class SeasonalProductProcessor extends BaseProductProcessor implements Pr
 
     @Override
     public boolean supports(Product product) {
-        return ProductCategory.SEASONAL.equals(product.getCategory());
+        return ProductType.SEASONAL.equals(product.getType());
     }
 
     @Override
     public void process(Product product) {
         LocalDate now = LocalDate.now();
 
-        boolean inSeason = isInSeason(product, now);
+        boolean inSeason = product.isInSeason(now);
         boolean restockAfterSeason = product.getLeadTime() != null &&
                 now.plusDays(product.getLeadTime()).isAfter(product.getSeasonEndDate());
 
-        if (inSeason && isAvailable(product)) {
+        if (inSeason && product.isAvailable()) {
             decrementStock(product);
         } else if (restockAfterSeason || product.getSeasonStartDate().isAfter(now)) {
             markUnavailable(product);
