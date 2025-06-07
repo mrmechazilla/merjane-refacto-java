@@ -18,12 +18,6 @@ public class NormalProductProcessor extends BaseProductProcessor implements Prod
         super(productRepository);
         this.productService = productService;
     }
-
-    @Override
-    public boolean supports(Product product) {
-        return ProductType.NORMAL.equals(product.getType());
-    }
-
     @Override
     public void process(Product product) {
         if (product.isAvailable()) {

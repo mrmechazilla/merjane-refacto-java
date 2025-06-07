@@ -19,11 +19,6 @@ public class ExpirableProductProcessor extends BaseProductProcessor implements P
     }
 
     @Override
-    public boolean supports(Product product) {
-        return ProductType.EXPIRABLE.equals(product.getType());
-    }
-
-    @Override
     public void process(Product product) {
         if (product.isAvailable() && !product.isExpired()) {
             decrementStock(product);

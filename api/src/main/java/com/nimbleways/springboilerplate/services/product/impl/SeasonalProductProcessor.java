@@ -28,11 +28,6 @@ public class SeasonalProductProcessor extends BaseProductProcessor implements Pr
     }
 
     @Override
-    public boolean supports(Product product) {
-        return ProductType.SEASONAL.equals(product.getType());
-    }
-
-    @Override
     public void process(Product product) {
         LocalDate now = LocalDate.now();
 

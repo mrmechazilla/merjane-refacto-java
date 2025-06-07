@@ -1,29 +1,25 @@
 package com.nimbleways.springboilerplate.services.product.impl;
 
 import com.nimbleways.springboilerplate.entities.Product;
+import com.nimbleways.springboilerplate.entities.enums.ProductType;
 import com.nimbleways.springboilerplate.services.product.ProductProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class ProductProcessingDelegator {
 
-    private final List<ProductProcessor> processors;
+    private final Map<ProductType, ProductProcessor> processors;
 
     public void process(Product product) {
-        processors.stream()
-                .filter(p -> p.supports(product))
-                .findFirst()
-                .ifPresentOrElse(
-                        processor -> {
-                            processor.process(product);
-                        },
-                        () -> {
-                            throw new IllegalStateException("No processor found for product type: " + product.getType());
-                        }
-                );
+        ProductProcessor processor = processors.get(product.getType());
+        if (processor == null) {
+            throw new IllegalStateException("No processor found for product category: " + product.getType());
+        }
+        processor.process(product);
     }
 }
